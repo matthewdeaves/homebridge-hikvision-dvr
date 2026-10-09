@@ -2,14 +2,14 @@
 
 ## 1.2.1
 
-- The web console now shows embedded in the plugin's settings page in the Homebridge UI (the DVR's no-framing header is replaced by one that allows only pages on the same host).
-- The console address on the settings page is readable in dark mode, and the embedded console is taller.
+- The plugin's settings page in the Homebridge UI shows an **Open web console** button and the console's address, instead of trying to embed the console (the DVR's pages don't work well inside the Homebridge UI, which also blocks their dialogs).
+- The address text is readable in the dark theme.
 
 ## 1.2.0
 
 **Web console** (off by default): the DVR's own web page served through Homebridge, with a stand-in for Hikvision's obsolete browser plugin, so live view, playback and motion-area drawing work in Safari and Chrome.
 
-- Open it at `http://<homebridge-ip>:8100/` or from the plugin's settings screen in the Homebridge UI, which shows it embedded.
+- Open it at `http://<homebridge-ip>:8100/` or with the **Open web console** button on the plugin's settings screen in the Homebridge UI.
 - Live view (up to 4 video windows at once per tab), snapshots, clip recording, digital zoom, full screen. Multi-window views use the DVR's sub stream; an enlarged window switches to the main stream.
 - Playback with pause, 1/4x to 4x speed (smooth in Safari too) and the timeline, whose clock matches the time burnt into the picture. Normal cursors instead of the DVR's garbled ones. The DVR allows one playback at a time; a second one says so in its window.
 - Saved clips and snapshots download to your browser's Downloads folder.

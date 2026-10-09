@@ -4,7 +4,6 @@
     <a id="open" class="btn btn-primary btn-sm" href="#" target="_blank" rel="noopener">Open web console</a>
   </div>
   <p id="note" class="small mt-2 mb-0" style="opacity:.7;word-break:break-all"></p>
-  <iframe id="frame" title="DVR web console" class="mt-3 w-100 border rounded" allow="fullscreen" style="height:70vh;min-height:400px;display:none"></iframe>
 </div>
 
 <script>
@@ -22,14 +21,7 @@
       // The console is plain HTTP on the Homebridge host, so build the URL from where this page was loaded.
       const url = `http://${window.location.hostname}:${info.port}/`;
       document.getElementById('open').href = url;
-      if (window.location.protocol === 'https:') {
-        note.textContent = 'The Homebridge UI is on HTTPS, so the browser blocks embedding the plain HTTP console here. Use the button to open it in its own tab.';
-      } else {
-        note.textContent = url;
-        const frame = document.getElementById('frame');
-        frame.src = url;
-        frame.style.display = '';
-      }
+      note.textContent = url;
     }
   } catch (e) {
     // No console section if the server side isn't reachable; the settings form still works.

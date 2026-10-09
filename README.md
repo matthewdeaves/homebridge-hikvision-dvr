@@ -63,8 +63,7 @@ To turn it on, open the plugin settings, expand **Web console**, tick **Web cons
 save and restart Homebridge. You can then open it two ways:
 
 - **In its own tab:** go to `http://<homebridge-ip>:8100/`.
-- **In the Homebridge UI:** the plugin's settings screen shows an **Open web console** button and the console embedded below it. If you
-  reach the Homebridge UI over HTTPS the browser won't embed a plain HTTP page, so only the button is shown.
+- **From the Homebridge UI:** the plugin's settings screen has an **Open web console** button.
 
 Log in with your DVR username and password as usual, or tick **Web console: log in automatically** to skip the login page.
 With it on, anyone on your home network who opens the console is logged in to the DVR as the plugin's account (usually `admin`),
