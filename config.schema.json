@@ -65,6 +65,13 @@
         "default": 0,
         "description": "0 = always use the main stream (best quality). E.g. 320 sends Apple Watch views from the DVR's low-resolution sub stream to save CPU."
       },
+      "minBitrate": {
+        "title": "Minimum bitrate (kbps)",
+        "type": "integer",
+        "minimum": 0,
+        "placeholder": "Automatic",
+        "description": "iOS often requests only ~300 kbps. By default the plugin uses at least 1200 kbps for 720p+ and 600 kbps for smaller views. Set 0 to use exactly what iOS asks for (better on slow remote connections)."
+      },
       "maxStreams": {
         "title": "Max simultaneous viewers per camera",
         "type": "integer",
@@ -105,7 +112,7 @@
       "type": "fieldset",
       "title": "Advanced",
       "expandable": true,
-      "items": ["verificationCode", "encoder", "subStreamMaxWidth", "maxStreams", "httpPort", "https", "rtspPort", "videoProcessor", "debug"]
+      "items": ["verificationCode", "encoder", "subStreamMaxWidth", "minBitrate", "maxStreams", "httpPort", "https", "rtspPort", "videoProcessor", "debug"]
     }
   ]
 }

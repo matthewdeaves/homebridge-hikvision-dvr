@@ -30,6 +30,7 @@ Only the IP address, username and password are needed. Everything else is option
 | Verification code | read from DVR | Only needed if the plugin can't read it. Use the 6-letter code on the DVR's sticker, or the one set in Hik-Connect / HiLook |
 | Video processing | Automatic | Uses the Raspberry Pi hardware encoder when available, otherwise libx264. *No transcoding* passes the DVR's stream through untouched (lowest CPU, experimental) |
 | Use sub stream up to width | 0 (never) | e.g. `320` serves Apple Watch views from the low-res sub stream |
+| Minimum bitrate | automatic | iOS often asks for only ~300 kbps; the plugin uses at least 1200 kbps for 720p+. `0` = exactly what iOS asks |
 | Max viewers per camera | 2 | |
 | HTTP / RTSP port, HTTPS | 80 / 554 / off | |
 
