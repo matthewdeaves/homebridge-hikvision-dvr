@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.2
+
+Fixes video freezing and high load on a Raspberry Pi when several cameras are opened at once (for example the 4-camera grid on an Apple TV).
+
+- With *Video processing* on Automatic, the plugin now chooses how to serve each stream by how many are being viewed at the same time. One viewer gets the main stream at up to 1280x720; two get the main stream at up to 960x540; three or more get the DVR's sub stream scaled to 640x360 at 800 kbps (the Pi hardware encoder runs four of these at 25 fps; a fifth is passed through unchanged). The DVR can only deliver about 5.5 Mbit/s in total, so several main streams at once gave about 13 fps anyway.
+- The choice is made for each stream when it starts and the log says which path was used and why. When the grid is closed, the next single view is back on the best path.
+- A failing hardware encode no longer switches the whole plugin to libx264 until restart. Only that stream falls back (to libx264 at up to 640 px wide, or pass-through if two are already running). Only if nothing else is encoding in hardware is the encoder treated as wedged, and then it is avoided for 10 minutes and tried again, not for good.
+- Waits up to 8 s (was 6 s) for the hardware encoder's first output before falling back.
+- Hardware *decoding* on the Pi was tested and is not used: it started slower, used more CPU and dropped frames.
+
 ## 1.2.1
 
 - The plugin's settings page in the Homebridge UI shows an **Open web console** button and the console's address, instead of trying to embed the console (the DVR's pages don't work well inside the Homebridge UI, which also blocks their dialogs).

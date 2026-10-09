@@ -31,7 +31,7 @@ Only the IP address, username and password are needed. Everything else is option
 | Motion sensors | on | A motion sensor per camera, from the DVR's own motion detection (see below) |
 | Motion reset | 30 s | How long motion stays on after the DVR's last motion event |
 | Verification code | read from DVR | Only needed if the plugin can't read it. Use the 6-letter code on the DVR's sticker, or the one set in Hik-Connect / HiLook |
-| Video processing | Automatic | Uses the Raspberry Pi hardware encoder when available (for views wider than 640 px; smaller views use libx264, which starts faster), otherwise libx264. *No transcoding* passes the DVR's stream through untouched (lowest CPU, experimental) |
+| Video processing | Automatic | Uses the Raspberry Pi hardware encoder when available (for views wider than 640 px; smaller views use libx264, which starts faster), otherwise libx264. With several viewers at once (e.g. an Apple TV camera grid) it automatically uses smaller output and the DVR's sub stream so a Pi keeps up (see below). *No transcoding* passes the DVR's stream through untouched (lowest CPU, experimental) |
 | Use sub stream up to width | 0 (never) | e.g. `320` serves Apple Watch views from the low-res sub stream |
 | Minimum bitrate | automatic | iOS often asks for only ~300 kbps; the plugin uses at least 1200 kbps for 720p+. `0` = exactly what iOS asks |
 | Max viewers per camera | 2 | |
@@ -78,6 +78,21 @@ which keeps the load on the DVR and the Homebridge machine down. Limitations:
 - Firmware upgrade and configuration import / export don't work through it. Use the DVR's own address for those.
 - It is plain HTTP, like the DVR itself, so **don't port-forward it** or expose it to the internet.
 - Tested only on a HiLook DVR-104G-F1.
+
+## Several cameras at once
+
+An Apple TV camera grid starts four streams at the same moment. On a Raspberry Pi (Automatic video processing) the plugin
+picks a path for every stream as it starts, depending on how many are being viewed, and logs the choice:
+
+| Viewers | Source | Output |
+|---|---|---|
+| 1 | main stream | up to 1280x720 (hardware encoder; libx264 if the view is 640 px or less) |
+| 2 | main stream | up to 960x540, hardware encoder |
+| 3 or more | sub stream | 640x360, 800 kbps, hardware encoder; a fifth and later stream is passed through unchanged |
+
+If the hardware encoder fails for one stream, only that stream falls back to libx264. If it is wedged (nothing is encoding in hardware),
+it is avoided for 10 minutes and then tried again. The DVR itself delivers only a few Mbit/s in total, so several main streams at once
+would be slow even with a faster computer. Hardware video *decoding* on the Pi was tried and made things slower.
 
 ## How it works
 
