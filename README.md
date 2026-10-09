@@ -35,6 +35,7 @@ Only the IP address, username and password are needed. Everything else is option
 | Use sub stream up to width | 0 (never) | e.g. `320` serves Apple Watch views from the low-res sub stream |
 | Minimum bitrate | automatic | iOS often asks for only ~300 kbps; the plugin uses at least 1200 kbps for 720p+. `0` = exactly what iOS asks |
 | Max viewers per camera | 2 | |
+| Web console / port | off / 8100 | Serves the DVR's web page with live view, playback and motion areas working (see below) |
 | HTTP / RTSP port, HTTPS | 80 / 554 / off | |
 
 The account needs permission to view live video. Use an **admin** account if you want the verification code read automatically.
@@ -50,6 +51,26 @@ web page, open **Configuration → Event → Motion**, pick each camera, and und
 **Notify Surveillance Center**. The plugin checks this on startup and says in the log which cameras need it.
 
 Motion areas and sensitivity are set on the DVR itself (its own screen, or the Hik-Connect / HiLook app).
+
+## Web console
+
+Newer browsers can't run Hikvision's browser plugin, so the DVR's own web page can't show live view or playback,
+or let you draw motion areas. The web console serves that same page through Homebridge with a stand-in for the
+plugin, so all three work in Safari and Chrome.
+
+To turn it on, open the plugin settings, expand **Web console**, tick **Web console** (port `8100` unless you change it),
+save and restart Homebridge. You can then open it two ways:
+
+- **In its own tab:** go to `http://<homebridge-ip>:8100/`.
+- **In the Homebridge UI:** the plugin's settings screen shows an **Open web console** button and the console embedded below it. If you
+  reach the Homebridge UI over HTTPS the browser won't embed a plain HTTP page, so only the button is shown.
+
+Log in with your DVR username and password as usual. Limitations:
+
+- No audio and no two-way talk.
+- Firmware upgrade and configuration import / export don't work through it. Use the DVR's own address for those.
+- It is plain HTTP, like the DVR itself, so **don't port-forward it** or expose it to the internet.
+- Tested only on a HiLook DVR-104G-F1.
 
 ## How it works
 

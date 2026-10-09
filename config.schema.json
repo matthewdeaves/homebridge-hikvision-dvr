@@ -1,7 +1,8 @@
 {
   "pluginAlias": "HikvisionDVR",
   "pluginType": "platform",
-  "singular": false,
+  "singular": true,
+  "customUi": true,
   "headerDisplay": "Enter your DVR/NVR's IP address and login. Cameras are found automatically, and encrypted HiLook / Hik-Connect streams are decrypted for you.",
   "schema": {
     "type": "object",
@@ -101,6 +102,19 @@
         "type": "string",
         "placeholder": "Bundled ffmpeg"
       },
+      "webConsole": {
+        "title": "Web console",
+        "type": "boolean",
+        "default": false,
+        "description": "Serves the DVR's own web page through Homebridge with live view, playback and motion areas working, at http://<homebridge-ip>:<port>. It is plain HTTP and not password-protected by Homebridge, so don't expose it to the internet."
+      },
+      "webConsolePort": {
+        "title": "Web console port",
+        "type": "integer",
+        "default": 8100,
+        "minimum": 1024,
+        "maximum": 65535
+      },
       "debug": { "title": "Debug logging", "type": "boolean", "default": false }
     }
   },
@@ -122,6 +136,12 @@
           "items": ["cameras[].channel", "cameras[].name", "cameras[].hidden"]
         }
       ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Web console",
+      "expandable": true,
+      "items": ["webConsole", "webConsolePort"]
     },
     {
       "type": "fieldset",
