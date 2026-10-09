@@ -1,0 +1,111 @@
+{
+  "pluginAlias": "HikvisionDVR",
+  "pluginType": "platform",
+  "singular": false,
+  "headerDisplay": "Enter your DVR/NVR's IP address and login. Cameras are found automatically, and encrypted HiLook / Hik-Connect streams are decrypted for you.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "default": "Hikvision DVR",
+        "required": true
+      },
+      "host": {
+        "title": "DVR / NVR IP address",
+        "type": "string",
+        "placeholder": "192.168.1.64",
+        "required": true,
+        "format": "hostname"
+      },
+      "username": {
+        "title": "Username",
+        "type": "string",
+        "default": "admin",
+        "required": true
+      },
+      "password": {
+        "title": "Password",
+        "type": "string",
+        "required": true
+      },
+      "verificationCode": {
+        "title": "Verification code (optional)",
+        "type": "string",
+        "description": "Only needed if your streams are encrypted and the plugin can't read the code from the device. It's the 6-letter code on the DVR's sticker, or the one you set in Hik-Connect / HiLook."
+      },
+      "cameras": {
+        "title": "Cameras (optional)",
+        "description": "Rename or hide individual cameras. Leave empty to add every camera the DVR reports.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "channel": { "title": "Channel number", "type": "integer", "minimum": 1, "required": true },
+            "name": { "title": "Name in HomeKit", "type": "string" },
+            "hidden": { "title": "Don't add to HomeKit", "type": "boolean" }
+          }
+        }
+      },
+      "encoder": {
+        "title": "Video processing",
+        "type": "string",
+        "default": "auto",
+        "oneOf": [
+          { "title": "Automatic (recommended)", "enum": ["auto"] },
+          { "title": "Raspberry Pi hardware encoder", "enum": ["h264_v4l2m2m"] },
+          { "title": "Software encoder (libx264)", "enum": ["libx264"] },
+          { "title": "No transcoding (lowest CPU, may look stretched)", "enum": ["copy"] }
+        ]
+      },
+      "subStreamMaxWidth": {
+        "title": "Use sub stream for views up to this width",
+        "type": "integer",
+        "default": 0,
+        "description": "0 = always use the main stream (best quality). E.g. 320 sends Apple Watch views from the DVR's low-resolution sub stream to save CPU."
+      },
+      "maxStreams": {
+        "title": "Max simultaneous viewers per camera",
+        "type": "integer",
+        "default": 2,
+        "minimum": 1,
+        "maximum": 4
+      },
+      "httpPort": { "title": "HTTP port", "type": "integer", "default": 80 },
+      "https": { "title": "Use HTTPS", "type": "boolean", "default": false },
+      "rtspPort": { "title": "RTSP port", "type": "integer", "default": 554 },
+      "videoProcessor": {
+        "title": "Custom ffmpeg path",
+        "type": "string",
+        "placeholder": "Bundled ffmpeg"
+      },
+      "debug": { "title": "Debug logging", "type": "boolean", "default": false }
+    }
+  },
+  "layout": [
+    "name",
+    "host",
+    "username",
+    "password",
+    {
+      "type": "fieldset",
+      "title": "Cameras",
+      "expandable": true,
+      "items": [
+        {
+          "key": "cameras",
+          "type": "array",
+          "orderable": false,
+          "items": ["cameras[].channel", "cameras[].name", "cameras[].hidden"]
+        }
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Advanced",
+      "expandable": true,
+      "items": ["verificationCode", "encoder", "subStreamMaxWidth", "maxStreams", "httpPort", "https", "rtspPort", "videoProcessor", "debug"]
+    }
+  ]
+}

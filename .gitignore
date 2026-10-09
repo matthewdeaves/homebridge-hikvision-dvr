@@ -1,0 +1,4 @@
+node_modules/
+*.log
+*.h264
+.DS_Store
