@@ -1,7 +1,7 @@
 {
   "name": "homebridge-hikvision-dvr",
   "displayName": "Hikvision DVR / NVR Cameras",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Hikvision, HiLook and other Hik-based DVR/NVR cameras in HomeKit, with automatic camera discovery and support for encrypted (Hik-Connect / HiLook) streams.",
   "main": "index.js",
   "license": "MIT",

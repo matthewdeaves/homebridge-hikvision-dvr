@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1
+
+- The web console now shows embedded in the plugin's settings page in the Homebridge UI (the DVR's no-framing header is replaced by one that allows only pages on the same host).
+- The console address on the settings page is readable in dark mode, and the embedded console is taller.
+
 ## 1.2.0
 
 **Web console** (off by default): the DVR's own web page served through Homebridge, with a stand-in for Hikvision's obsolete browser plugin, so live view, playback and motion-area drawing work in Safari and Chrome.
