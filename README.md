@@ -3,7 +3,8 @@
 Hikvision, HiLook and other Hik-based DVR / NVR cameras in Apple HomeKit.
 
 Enter your DVR's IP address, username and password. The plugin finds every camera,
-names them the way your DVR does, and streams them to the Home app.
+names them the way your DVR does, streams them to the Home app, and adds a motion sensor to each one so you
+get motion notifications and automations.
 
 **It also plays encrypted streams.** If you use the HiLook or Hik-Connect app, your recorder probably has
 *video encryption* turned on. Every other player then gets garbage: VLC, go2rtc, homebridge-camera-ffmpeg and
@@ -27,6 +28,8 @@ Only the IP address, username and password are needed. Everything else is option
 | Setting | Default | |
 |---|---|---|
 | Cameras | all | Rename or hide channels |
+| Motion sensors | on | A motion sensor per camera, from the DVR's own motion detection (see below) |
+| Motion reset | 30 s | How long motion stays on after the DVR's last motion event |
 | Verification code | read from DVR | Only needed if the plugin can't read it. Use the 6-letter code on the DVR's sticker, or the one set in Hik-Connect / HiLook |
 | Video processing | Automatic | Uses the Raspberry Pi hardware encoder when available, otherwise libx264. *No transcoding* passes the DVR's stream through untouched (lowest CPU, experimental) |
 | Use sub stream up to width | 0 (never) | e.g. `320` serves Apple Watch views from the low-res sub stream |
@@ -36,9 +39,23 @@ Only the IP address, username and password are needed. Everything else is option
 
 The account needs permission to view live video. Use an **admin** account if you want the verification code read automatically.
 
+## Motion
+
+Each camera gets a motion sensor driven by the DVR's own motion detection (and line-crossing / intrusion
+detection if your model has it). In the Home app you can then turn on motion notifications for the camera or use
+it in automations.
+
+The DVR only sends motion to other software if **Notify Surveillance Center** is ticked. On the DVR's screen or
+web page, open **Configuration → Event → Motion**, pick each camera, and under **Linkage Method** tick
+**Notify Surveillance Center**. The plugin checks this on startup and says in the log which cameras need it.
+
+Motion areas and sensitivity are set on the DVR itself (its own screen, or the Hik-Connect / HiLook app).
+
 ## How it works
 
 - Discovers cameras via ISAPI: analog DVR inputs, NVR IP channels, or a single IP camera.
+- Listens to the DVR's ISAPI event stream (`/ISAPI/Event/notification/alertStream`) for motion, and reconnects
+  if it drops.
 - Fetches snapshots from the DVR's JPEG API and scales them to 16:9. Many DVRs return 4:3 snapshots even for
   16:9 cameras.
 - Reads the RTSP stream with its own small client and decrypts it when needed. Encrypted NAL units are flagged by a
@@ -62,6 +79,8 @@ with your model either way.
 - **"Login failed"**: check the username and password. Hikvision locks the account for 30 minutes after several failures.
 - **Snapshots but no video**: turn on *Debug logging*, start a stream, and check the log. If the log says the
   stream is encrypted and no code is known, enter the verification code.
+- **No motion in HomeKit**: check the log for a "won't reach HomeKit" warning and tick *Notify Surveillance
+  Center* as described under [Motion](#motion). Turn on *Debug logging* to see every event the DVR sends.
 - **Slow on a Pi**: set *Use sub stream up to width* to `640` to use the lighter sub stream for small views.
 
 ## License

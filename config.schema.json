@@ -48,6 +48,20 @@
           }
         }
       },
+      "motion": {
+        "title": "Motion sensors",
+        "type": "boolean",
+        "default": true,
+        "description": "Adds a motion sensor to each camera, driven by the DVR's own motion detection. The DVR must have \"Notify Surveillance Center\" ticked for motion (Configuration → Event → Motion → Linkage Method); the log says if it doesn't."
+      },
+      "motionTimeout": {
+        "title": "Motion reset (seconds)",
+        "type": "integer",
+        "default": 30,
+        "minimum": 5,
+        "maximum": 600,
+        "description": "How long motion stays on after the DVR's last motion event."
+      },
       "encoder": {
         "title": "Video processing",
         "type": "string",
@@ -95,6 +109,7 @@
     "host",
     "username",
     "password",
+    "motion",
     {
       "type": "fieldset",
       "title": "Cameras",
@@ -112,7 +127,7 @@
       "type": "fieldset",
       "title": "Advanced",
       "expandable": true,
-      "items": ["verificationCode", "encoder", "subStreamMaxWidth", "minBitrate", "maxStreams", "httpPort", "https", "rtspPort", "videoProcessor", "debug"]
+      "items": ["verificationCode", "motionTimeout", "encoder", "subStreamMaxWidth", "minBitrate", "maxStreams", "httpPort", "https", "rtspPort", "videoProcessor", "debug"]
     }
   ]
 }

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b3a55"/>
+      <stop offset="1" stop-color="#15203a"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" rx="88" fill="url(#bg)"/>
+  <!-- wall mount -->
+  <rect x="58" y="92" width="34" height="120" rx="10" fill="#c9d3e6"/>
+  <rect x="80" y="140" width="96" height="26" rx="8" fill="#c9d3e6"/>
+  <!-- bullet camera body, tilted down toward the viewer -->
+  <g transform="rotate(14 230 150)">
+    <rect x="120" y="96" width="210" height="96" rx="30" fill="#ffffff"/>
+    <rect x="300" y="88" width="62" height="112" rx="22" fill="#e6ebf5"/>
+    <rect x="128" y="86" width="190" height="20" rx="10" fill="#e6ebf5"/>
+    <circle cx="331" cy="144" r="34" fill="#15203a"/>
+    <circle cx="331" cy="144" r="20" fill="#3c6fd8"/>
+    <circle cx="339" cy="136" r="6" fill="#bcd2ff"/>
+  </g>
+  <!-- unlocked padlock: decrypts encrypted streams -->
+  <g transform="translate(222 232)">
+    <circle cx="64" cy="64" r="74" fill="#15203a"/>
+    <path d="M30 58 V40 a28 28 0 0 1 56 0 V44" fill="none" stroke="#3ccf91" stroke-width="16" stroke-linecap="round" transform="translate(-14 0)"/>
+    <rect x="18" y="58" width="92" height="72" rx="16" fill="#3ccf91"/>
+    <circle cx="64" cy="88" r="11" fill="#15203a"/>
+    <rect x="58" y="92" width="12" height="22" rx="5" fill="#15203a"/>
+  </g>
+</svg>
