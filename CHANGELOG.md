@@ -6,11 +6,12 @@
 
 - Open it at `http://<homebridge-ip>:8100/` or from the plugin's settings screen in the Homebridge UI, which shows it embedded.
 - Live view (up to 4 video windows at once per tab), snapshots, clip recording, digital zoom, full screen. Multi-window views use the DVR's sub stream; an enlarged window switches to the main stream.
-- Playback with pause, 1/8x to 4x speed and the timeline (with normal cursors instead of the DVR's garbled ones).
+- Playback with pause, 1/4x to 4x speed (smooth in Safari too) and the timeline, whose clock matches the time burnt into the picture. Normal cursors instead of the DVR's garbled ones. The DVR allows one playback at a time; a second one says so in its window.
+- Saved clips and snapshots download to your browser's Downloads folder.
 - Motion grid, video tamper and privacy mask areas can be drawn and saved.
-- New settings: **Web console**, **Web console port** (8100) and **Log in automatically** (off). Auto-login logs every visitor in to the DVR as the plugin's account, so only use it on a trusted network.
+- New settings: **Web console**, **Web console port** (8100) and **Log in automatically** (off). Auto-login logs every visitor in to the DVR as the plugin's account, so only use it on a trusted network. Logout still works: it stays logged out until you open the console's address again.
 - Not supported through it: audio, two-way talk, firmware upgrade, config import/export. It's plain HTTP, so don't expose it to the internet.
-- The plugin settings now use a custom Homebridge UI page (adds `@homebridge/plugin-ui-utils`), and the plugin is single-instance.
+- The plugin settings now use a custom Homebridge UI page (adds `@homebridge/plugin-ui-utils`), and the plugin is single-instance. The password and verification code fields are now hidden.
 
 **Faster, more reliable HomeKit streams**
 

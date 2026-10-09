@@ -29,11 +29,13 @@
       "password": {
         "title": "Password",
         "type": "string",
-        "required": true
+        "required": true,
+        "x-schema-form": { "type": "password" }
       },
       "verificationCode": {
         "title": "Verification code (optional)",
         "type": "string",
+        "x-schema-form": { "type": "password" },
         "description": "Only needed if your streams are encrypted and the plugin can't read the code from the device. It's the 6-letter code on the DVR's sticker, or the one you set in Hik-Connect / HiLook."
       },
       "cameras": {
