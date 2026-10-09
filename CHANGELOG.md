@@ -8,6 +8,7 @@ Fixes video freezing and high load on a Raspberry Pi when several cameras are op
 - The choice is made for each stream when it starts and the log says which path was used and why. When the grid is closed, the next single view is back on the best path.
 - A failing hardware encode no longer switches the whole plugin to libx264 until restart. Only that stream falls back (to libx264 at up to 640 px wide, or pass-through if two are already running). Only if nothing else is encoding in hardware is the encoder treated as wedged, and then it is avoided for 10 minutes and tried again, not for good.
 - Waits up to 8 s (was 6 s) for the hardware encoder's first output before falling back.
+- Live view starts much faster on a Pi: the first picture now arrives in about 0.5 s for a single view and 0.7-0.9 s per tile in the grid (was 2.5 s and 2.6-5 s). The hardware path was throwing away its first keyframe (about 2 s) and probing its input for longer than needed. When the DVR joins a sub stream mid-picture-group (which used to delay a tile by 2-3 s), the plugin now asks it for a keyframe.
 - Hardware *decoding* on the Pi was tested and is not used: it started slower, used more CPU and dropped frames.
 
 ## 1.2.1
