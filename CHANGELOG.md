@@ -8,6 +8,7 @@
 - **Web console** (off by default): serves the DVR's own web page through Homebridge with a stand-in for Hikvision's obsolete browser plugin, so live view, playback and motion-area drawing work in Safari and Chrome. Open it at `http://<homebridge-ip>:8100/` or from the plugin's settings screen in the Homebridge UI, which now also shows it embedded.
 - New settings: **Web console**, **Web console port** (8100) and **Web console: log in automatically** (off). The last one logs every visitor in to the DVR as the plugin's account, so only use it on a trusted network.
 - Multi-window live view uses the DVR's sub stream (the main stream when a window is enlarged), to keep CPU and memory low on small devices.
+- At most 4 video windows play at once per browser tab, so a 3x3 or 4x4 layout can't use up the browser's connections and freeze the page. The playback timeline now shows normal grab cursors in Chrome and Safari instead of the DVR's garbled ones.
 - No audio, two-way talk or firmware upgrade / import / export through it. It is plain HTTP, so don't expose it to the internet.
 - The plugin settings now use a custom Homebridge UI page (adds `@homebridge/plugin-ui-utils`), and the plugin is marked as single-instance.
 

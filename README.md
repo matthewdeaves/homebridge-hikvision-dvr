@@ -75,6 +75,7 @@ Windows in a 2x2 or larger live view use the DVR's low-resolution sub stream (th
 which keeps the load on the DVR and the Homebridge machine down. Limitations:
 
 - No audio and no two-way talk.
+- At most 4 video windows play at once per browser tab (browsers allow only 6 connections to one address, and the page itself needs some). In a 3x3 or 4x4 layout the extra windows show "Max 4 video windows in the web console".
 - Firmware upgrade and configuration import / export don't work through it. Use the DVR's own address for those.
 - It is plain HTTP, like the DVR itself, so **don't port-forward it** or expose it to the internet.
 - Tested only on a HiLook DVR-104G-F1.
