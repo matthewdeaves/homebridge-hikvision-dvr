@@ -2,8 +2,12 @@
 
 ## Unreleased
 
+- **Faster stream start**: live view now shows video in about half a second instead of 1.5 s or more. The decoder was discarding the first second of the DVR's frames because its keyframes carry no recovery point.
+- Automatic video processing now uses libx264 for views up to 640 px wide (about 0.85 of one Pi 3 core, and quicker to start); the Pi hardware encoder is still used for larger views. Choosing the hardware encoder explicitly is unchanged.
+- If the Pi hardware encoder produces no video within 6 s (its kernel driver can wedge until the Pi is rebooted), the stream switches to libx264 and stays there until Homebridge restarts, instead of spinning forever.
 - **Web console** (off by default): serves the DVR's own web page through Homebridge with a stand-in for Hikvision's obsolete browser plugin, so live view, playback and motion-area drawing work in Safari and Chrome. Open it at `http://<homebridge-ip>:8100/` or from the plugin's settings screen in the Homebridge UI, which now also shows it embedded.
-- New settings: **Web console** and **Web console port** (8100).
+- New settings: **Web console**, **Web console port** (8100) and **Web console: log in automatically** (off). The last one logs every visitor in to the DVR as the plugin's account, so only use it on a trusted network.
+- Multi-window live view uses the DVR's sub stream (the main stream when a window is enlarged), to keep CPU and memory low on small devices.
 - No audio, two-way talk or firmware upgrade / import / export through it. It is plain HTTP, so don't expose it to the internet.
 - The plugin settings now use a custom Homebridge UI page (adds `@homebridge/plugin-ui-utils`), and the plugin is marked as single-instance.
 

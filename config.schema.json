@@ -115,6 +115,12 @@
         "minimum": 1024,
         "maximum": 65535
       },
+      "webConsoleAutoLogin": {
+        "title": "Web console: log in automatically",
+        "type": "boolean",
+        "default": false,
+        "description": "Anyone on your home network who opens the web console is logged in to the DVR as this plugin's account, with no password prompt. The browser receives the password too (the DVR's own login page also keeps it in the tab's session storage). Only turn this on for a trusted network."
+      },
       "debug": { "title": "Debug logging", "type": "boolean", "default": false }
     }
   },
@@ -141,7 +147,7 @@
       "type": "fieldset",
       "title": "Web console",
       "expandable": true,
-      "items": ["webConsole", "webConsolePort"]
+      "items": ["webConsole", "webConsolePort", "webConsoleAutoLogin"]
     },
     {
       "type": "fieldset",

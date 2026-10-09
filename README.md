@@ -31,11 +31,12 @@ Only the IP address, username and password are needed. Everything else is option
 | Motion sensors | on | A motion sensor per camera, from the DVR's own motion detection (see below) |
 | Motion reset | 30 s | How long motion stays on after the DVR's last motion event |
 | Verification code | read from DVR | Only needed if the plugin can't read it. Use the 6-letter code on the DVR's sticker, or the one set in Hik-Connect / HiLook |
-| Video processing | Automatic | Uses the Raspberry Pi hardware encoder when available, otherwise libx264. *No transcoding* passes the DVR's stream through untouched (lowest CPU, experimental) |
+| Video processing | Automatic | Uses the Raspberry Pi hardware encoder when available (for views wider than 640 px; smaller views use libx264, which starts faster), otherwise libx264. *No transcoding* passes the DVR's stream through untouched (lowest CPU, experimental) |
 | Use sub stream up to width | 0 (never) | e.g. `320` serves Apple Watch views from the low-res sub stream |
 | Minimum bitrate | automatic | iOS often asks for only ~300 kbps; the plugin uses at least 1200 kbps for 720p+. `0` = exactly what iOS asks |
 | Max viewers per camera | 2 | |
 | Web console / port | off / 8100 | Serves the DVR's web page with live view, playback and motion areas working (see below) |
+| Web console: log in automatically | off | Skips the console's login page by logging in with the plugin's DVR account. Anyone on your network can then use the console (see below) |
 | HTTP / RTSP port, HTTPS | 80 / 554 / off | |
 
 The account needs permission to view live video. Use an **admin** account if you want the verification code read automatically.
@@ -65,7 +66,13 @@ save and restart Homebridge. You can then open it two ways:
 - **In the Homebridge UI:** the plugin's settings screen shows an **Open web console** button and the console embedded below it. If you
   reach the Homebridge UI over HTTPS the browser won't embed a plain HTTP page, so only the button is shown.
 
-Log in with your DVR username and password as usual. Limitations:
+Log in with your DVR username and password as usual, or tick **Web console: log in automatically** to skip the login page.
+With it on, anyone on your home network who opens the console is logged in to the DVR as the plugin's account (usually `admin`),
+and their browser receives that password (the DVR's login page also keeps it in the tab's session storage). It tries once per 30 seconds
+and stops for 10 minutes if the DVR refuses the login. Add `?manual` to the login address (`/doc/page/login.asp?manual`) to log in as someone else.
+
+Windows in a 2x2 or larger live view use the DVR's low-resolution sub stream (the main stream when you enlarge one window with a double-click),
+which keeps the load on the DVR and the Homebridge machine down. Limitations:
 
 - No audio and no two-way talk.
 - Firmware upgrade and configuration import / export don't work through it. Use the DVR's own address for those.
