@@ -4,7 +4,7 @@
 
 Smoother live video when Homebridge runs on a PC or server (anything that isn't a Raspberry Pi).
 
-- On a machine with 4 or more cores and no Pi hardware encoder, software-encoded streams keep the DVR's own frame timing instead of being forced to exactly 25 fps, and use the `veryfast` x264 preset instead of `ultrafast` for a cleaner picture. Forcing 25 fps duplicated and dropped frames irregularly, because the DVR's frames arrive unevenly, which showed as judder.
+- On a machine with 4 or more cores and no Pi hardware encoder, software-encoded streams use the same two-stage path as the Pi's hardware encoder: libx264 (`veryfast` preset, for a cleaner picture than `ultrafast`) encodes at a constant 25 fps and a copy-only sender stamps the frames exactly 40 ms apart. DVRs deliver frames unevenly (about 20 fps with irregular gaps on a DVR-104G), and passing their timing through showed as judder.
 - Raspberry Pi behaviour is unchanged.
 
 ## 1.2.2
