@@ -31,9 +31,9 @@ Only the IP address, username and password are needed. Everything else is option
 | Motion sensors | on | A motion sensor per camera, from the DVR's own motion detection (see below) |
 | Motion reset | 30 s | How long motion stays on after the DVR's last motion event |
 | Verification code | read from DVR | Only needed if the plugin can't read it. Use the 6-letter code on the DVR's sticker, or the one set in Hik-Connect / HiLook |
-| Video processing | Automatic | Uses the Raspberry Pi hardware encoder when available (for views wider than 640 px; smaller views use libx264, which starts faster), otherwise libx264. With several viewers at once (e.g. an Apple TV camera grid) it automatically uses smaller output and the DVR's sub stream so a Pi keeps up (see below). *No transcoding* passes the DVR's stream through untouched (lowest CPU, experimental) |
+| Video processing | Automatic | Uses the Raspberry Pi hardware encoder when available (for views wider than 640 px; smaller views use libx264, which starts faster); on a PC/server with an Intel/AMD GPU and a VAAPI ffmpeg, the GPU (see [PC / server](#pc--server-with-an-intelamd-gpu)); otherwise libx264. With several viewers at once (e.g. an Apple TV camera grid) it automatically uses smaller output and the DVR's sub stream so a Pi keeps up (see below). *No transcoding* passes the DVR's stream through untouched (lowest CPU, experimental) |
 | Use sub stream up to width | 0 (never) | e.g. `320` serves Apple Watch views from the low-res sub stream |
-| Minimum bitrate | automatic | iOS often asks for only ~300 kbps; the plugin uses at least 1200 kbps for 720p+. `0` = exactly what iOS asks |
+| Minimum bitrate | automatic | iOS often asks for only ~300 kbps; the plugin uses at least 1200 kbps for 720p+ (2000-3000 kbps for 720p and 5000 kbps for 1080p on a PC/server). `0` = exactly what iOS asks |
 | Max viewers per camera | 2 | |
 | Web console / port | off / 8100 | Serves the DVR's web page with live view, playback and motion areas working (see below) |
 | Web console: log in automatically | off | Skips the console's login page by logging in with the plugin's DVR account. Anyone on your network can then use the console (see below) |
@@ -91,8 +91,35 @@ picks a path for every stream as it starts, depending on how many are being view
 | 3 or more | sub stream | 640x360, 800 kbps, hardware encoder; a fifth and later stream is passed through unchanged |
 
 If the hardware encoder fails for one stream, only that stream falls back to libx264. If it is wedged (nothing is encoding in hardware),
-it is avoided for 10 minutes and then tried again. The DVR itself delivers only a few Mbit/s in total, so several main streams at once
-would be slow even with a faster computer. Hardware video *decoding* on the Pi was tried and made things slower.
+it is avoided for 10 minutes and then tried again. The Pi's own network and CPU limit it to a few Mbit/s of DVR video in total, so several main streams at once are slow there. (A PC or server has no such limit; see below.) Hardware video *decoding* on the Pi was tried and made things slower.
+
+## PC / server with an Intel/AMD GPU
+
+On anything that isn't a Raspberry Pi the plugin serves up to 4 viewers from the main stream at the size they ask for (up to 1920x1080
+on the GPU, 1280x720 with libx264), with the frames stamped evenly at 25 fps. With *Video processing* on Automatic it encodes on the
+GPU (VAAPI, Intel Quick Sync) when all of these hold: there is a render node (`/dev/dri/renderD128`), an ffmpeg with `h264_vaapi` and
+`libx264` can be found, and a real one-second test encode on the GPU works. Otherwise it uses libx264. The log tells you which:
+`Video: transcoding on the GPU (h264_vaapi, /dev/dri/renderD128) with /usr/bin/ffmpeg`. If a GPU encode ever fails to produce video,
+that stream continues with libx264.
+
+The ffmpeg bundled with Homebridge has no VAAPI, so a system ffmpeg is needed; the plugin looks for `ffmpeg` on the PATH, then
+`/usr/bin/ffmpeg` and `/usr/local/bin/ffmpeg` (or set *Custom ffmpeg path*, which is used as is). Typical setup:
+
+- **Bare metal / VM:** `sudo apt install ffmpeg intel-media-va-driver-non-free vainfo` (on Debian/Ubuntu the driver is in `non-free`/`multiverse`) and make sure the Homebridge user can read `/dev/dri/renderD128` (group `render`). Check with `vainfo`.
+- **Docker:** pass `/dev/dri` into the container (`devices: ["/dev/dri:/dev/dri"]`; add the `render` group unless the container runs as root, as the official Homebridge image does) and build a small image on top of the official one, for example
+  ```dockerfile
+  FROM homebridge/homebridge:2026-09-25
+  RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg intel-media-va-driver-non-free vainfo libva-drm2 \
+   && rm -rf /var/lib/apt/lists/*
+  ENV LIBVA_DRIVER_NAME=iHD LIBVA_DRIVERS_PATH=/usr/lib/x86_64-linux-gnu/dri
+  ```
+  The image keeps its own static ffmpeg in `/usr/local/bin`; the distro one in `/usr/bin/ffmpeg` is the one the plugin picks.
+
+Measured on a Core i5-9500T (UHD 630) with a 4-channel DVR (960x1080 main streams, ~2 Mbit/s each), replaying the DVR's real stream:
+one 1080p stream uses about 30% of a core on the GPU path, four use about 115%; libx264 at 720p uses 60-80% of a core per stream
+(four: about 240%) and about 115% at 1080p. Start time (first output frame) is 50-100 ms on both. The GPU encoder needs roughly twice the
+bitrate of libx264 for the same sharpness, which is why the minimum bitrates are higher on the GPU path (5000 kbps at 1080p).
+Four main streams at once were delivered by the DVR at full frame rate (about 9 Mbit/s in total).
 
 ## How it works
 

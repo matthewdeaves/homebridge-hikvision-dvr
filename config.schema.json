@@ -72,6 +72,7 @@
         "oneOf": [
           { "title": "Automatic (recommended)", "enum": ["auto"] },
           { "title": "Raspberry Pi hardware encoder", "enum": ["h264_v4l2m2m"] },
+          { "title": "Intel/AMD GPU encoder (VAAPI)", "enum": ["h264_vaapi"] },
           { "title": "Software encoder (libx264)", "enum": ["libx264"] },
           { "title": "No transcoding (lowest CPU, may look stretched)", "enum": ["copy"] }
         ]

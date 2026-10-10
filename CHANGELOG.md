@@ -1,10 +1,21 @@
 # Changelog
 
+## 1.4.0
+
+Better live video on a PC or server (anything that isn't a Raspberry Pi), including encoding on an Intel/AMD GPU. Raspberry Pi behaviour is unchanged.
+
+- **GPU encoding (VAAPI / Intel Quick Sync).** With *Video processing* on Automatic, a PC or server with a GPU (`/dev/dri/renderD*`) encodes H.264 on the GPU when an ffmpeg with `h264_vaapi` is available and a real one-second test encode succeeds. Streams are decoded in software, scaled and encoded on the GPU, so a 1080p stream costs about 0.3 of a core where libx264 at 720p costs 0.6-0.8 and at 1080p more than one. A new *Intel/AMD GPU encoder (VAAPI)* choice under *Video processing* asks for it explicitly. GPU *decoding* was tested and is not used: it was only slightly cheaper and the picture was blockier.
+- **How ffmpeg is chosen.** *Custom ffmpeg path* always wins. Otherwise the plugin uses its bundled ffmpeg, except that on a non-Pi machine with a GPU it first looks for a system ffmpeg (`ffmpeg` on the PATH, `/usr/bin/ffmpeg`, `/usr/local/bin/ffmpeg`) that has both `h264_vaapi` and `libx264` and passes the test encode, and uses that one. The bundled ffmpeg has no VAAPI. The log says which encoder and which ffmpeg are in use.
+- **Fallback.** If a GPU encode produces no video within 8 s or ffmpeg exits, that stream switches to libx264 (at most 1280x720). After three failures in a row with no GPU stream working, the GPU is left alone for 10 minutes.
+- **Higher quality on a PC/server.** The viewer gets the size it asks for (up to 1920x1080 on the GPU, 1280x720 with libx264, since the DVR's 960x1080 main stream has no more detail) from the main stream for up to 4 viewers at once; a fifth viewer gets the sub stream. Minimum bitrates by size: GPU 5000 kbps for 1080p, 3000 kbps for 720p; libx264 2000 kbps for 720p (the GPU encoder needs roughly twice the bitrate of libx264 `veryfast` for the same sharpness). *Minimum bitrate* still overrides. 1080p streams are labelled H.264 level 4.0.
+- **Even frame timing (all fast hosts).** libx264 and GPU streams use a two-stage pipeline: the encoder outputs a constant 25 fps and a copy-only second ffmpeg stamps the frames exactly 40 ms apart for SRTP. DVRs deliver about 20 fps with irregular gaps, and passing that timing through showed as judder.
+- **Abandoned streams stop sooner.** A stream whose viewer stops sending RTCP (for example an Apple TV tile it gave up on without sending a stop) is now ended after 15-30 s (it was at least 30 s and up to ten report intervals), so HomeKit can start a new one. The log says how many reports had arrived.
+
 ## 1.3.0
 
 Smoother live video when Homebridge runs on a PC or server (anything that isn't a Raspberry Pi).
 
-- On a machine with 4 or more cores and no Pi hardware encoder, software-encoded streams use the same two-stage path as the Pi's hardware encoder: libx264 (`veryfast` preset, for a cleaner picture than `ultrafast`) encodes at a constant 25 fps and a copy-only sender stamps the frames exactly 40 ms apart. DVRs deliver frames unevenly (about 20 fps with irregular gaps on a DVR-104G), and passing their timing through showed as judder.
+- On a machine with 4 or more cores and no Pi hardware encoder, software-encoded streams use libx264 with the `veryfast` preset (a cleaner picture than `ultrafast`) in a single ffmpeg process, passing the DVR's frame timestamps through to the viewer (`-fps_mode passthrough`) instead of forcing a constant frame rate.
 - Raspberry Pi behaviour is unchanged.
 
 ## 1.2.2
