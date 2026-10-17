@@ -109,7 +109,7 @@
         "title": "Web console",
         "type": "boolean",
         "default": false,
-        "description": "Serves the DVR's own web page through Homebridge with live view, playback and motion areas working, at http://<homebridge-ip>:<port>. It is plain HTTP and not password-protected by Homebridge, so don't expose it to the internet."
+        "description": "Serves the DVR's own web page through Homebridge with live view, playback and motion areas working, at http://<homebridge-ip>:<port>. It is plain HTTP and not password-protected by Homebridge, so don't expose it to the internet. Warning: once someone is logged in to the DVR through the console (any DVR user), video streams are opened with this plugin's own account, so a limited DVR user can view channels that account can see."
       },
       "webConsolePort": {
         "title": "Web console port",
@@ -117,6 +117,12 @@
         "default": 8100,
         "minimum": 1024,
         "maximum": 65535
+      },
+      "webConsoleAllowedHosts": {
+        "title": "Web console: extra allowed hostnames",
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "The console refuses requests whose address is not an IP, localhost, *.local or this machine's own hostname (a guard against DNS rebinding). If you open it by another name, for example u26 or homebridge.lan (common under Docker), list that name here."
       },
       "webConsoleAutoLogin": {
         "title": "Web console: log in automatically",
@@ -150,7 +156,7 @@
       "type": "fieldset",
       "title": "Web console",
       "expandable": true,
-      "items": ["webConsole", "webConsolePort", "webConsoleAutoLogin"]
+      "items": ["webConsole", "webConsolePort", "webConsoleAllowedHosts", "webConsoleAutoLogin"]
     },
     {
       "type": "fieldset",

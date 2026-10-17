@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.1
+
+- **Web console:** a playback stream whose DVR session closes while it is starting now gets an error response and frees its slot, instead of hanging.
+- **Web console:** new `webConsoleAllowedHosts` option lists extra hostnames (such as `u26` or `homebridge.lan`) the console accepts; default behaviour is unchanged.
+- **Web console:** documented that session-login streams use the plugin's own DVR account (the DVR's login check does not reveal the session's user, so it cannot be restricted).
+- Camera names given to HomeKit are cleaned to letters, digits, spaces and apostrophes (falling back to `Camera NN`).
+
 ## 1.4.0
 
 Better live video on a PC or server (anything that isn't a Raspberry Pi), including encoding on an Intel/AMD GPU. Raspberry Pi behaviour is unchanged.

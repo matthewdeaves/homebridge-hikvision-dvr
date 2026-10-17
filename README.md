@@ -36,6 +36,7 @@ Only the IP address, username and password are needed. Everything else is option
 | Minimum bitrate | automatic | iOS often asks for only ~300 kbps; the plugin uses at least 1200 kbps for 720p+ (2000-3000 kbps for 720p and 5000 kbps for 1080p on a PC/server). `0` = exactly what iOS asks |
 | Max viewers per camera | 2 | |
 | Web console / port | off / 8100 | Serves the DVR's web page with live view, playback and motion areas working (see below) |
+| Web console: extra allowed hostnames | none | Hostnames (e.g. `u26`, `homebridge.lan`) the console accepts besides IPs, `localhost`, `*.local` and the machine's own name |
 | Web console: log in automatically | off | Skips the console's login page by logging in with the plugin's DVR account. Anyone on your network can then use the console (see below) |
 | HTTP / RTSP port, HTTPS | 80 / 554 / off | |
 
@@ -69,6 +70,12 @@ Log in with your DVR username and password as usual, or tick **Web console: log 
 With it on, anyone on your home network who opens the console is logged in to the DVR as the plugin's account (usually `admin`),
 and their browser receives that password (the DVR's login page also keeps it in the tab's session storage). It tries once per 30 seconds
 and stops for 10 minutes if the DVR refuses the login. Add `?manual` to the login address (`/doc/page/login.asp?manual`) to log in as someone else.
+
+Note: video streams for a logged-in session are opened with the plugin's own DVR account, because the DVR's login check does not say which user
+the session belongs to. Any DVR user who can log in to the console can therefore watch every channel the plugin's account can. Only give console
+access to people you would trust with that account. Logging in with a user name and password (the digest form) is checked by the DVR itself.
+
+If you open the console by a hostname such as `u26` or `homebridge.lan` (typical under Docker) and get "Forbidden host", add that name to **Web console: extra allowed hostnames**.
 
 Windows in a 2x2 or larger live view use the DVR's low-resolution sub stream (the main stream when you enlarge one window with a double-click),
 which keeps the load on the DVR and the Homebridge machine down. Limitations:
